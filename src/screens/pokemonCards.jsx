@@ -3,22 +3,23 @@ import { fetchData, pokemonSearchData } from "../api/apiCalls";
 import { PokemonContext } from "../components/PokemonContext";
 
 // components
-import ArrowUp from '../components/ArrowUp';
+import ArrowUp from "../components/ArrowUp";
 
 // assets
 import pokeBall from "../assets/pokeball.png";
 import ViewDetailModal from "../components/modal/ViewDetailModal";
 
 const PokemonCards = () => {
-  const [pokemonData, setPokemonData] = useState([]); 
-  const [searchResults, setSearchResults] = useState(null); 
+  const [pokemonData, setPokemonData] = useState([]);
+  const [searchResults, setSearchResults] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
-  const { pokemonSearch } = useContext(PokemonContext);
-  const [clickedPokemon, setClickedPokemon] = useState(null);
+  const { pokemonSearch, setPokemonSearch } = useContext(PokemonContext);
+  const [action, setAction] = useState(null);
+  const [clickedPokemon, setClickedPokemon] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onToggleModal = (name) => {
@@ -45,7 +46,7 @@ const PokemonCards = () => {
 
   useEffect(() => {
     if (!pokemonSearch.trim()) {
-      setSearchResults(null); 
+      setSearchResults(null);
       return;
     }
 
@@ -68,55 +69,73 @@ const PokemonCards = () => {
     fetchSearchedPokemon();
   }, [pokemonSearch]);
 
+  const onToggleControl = (action) => {
+    setPokemonSearch(action.toString());
+  };
+
   const loadMore = () => {
     setOffset((prevOffset) => prevOffset + 20);
   };
 
-  if (error) return <div className="text-red-500 text-center">Error: {error.message}</div>;
-
-  if (loading && pokemonData.length === 0)
+  if (error)
     return (
-      <div className="fixed top-0 left-0 w-full h-dvh bg-gray-900/30 flex justify-center items-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-gray-900">
+      <div className="text-center text-red-500">Error: {error.message}</div>
+    );
+
+  if (loading)
+    return (
+      <div className="fixed top-0 left-0 flex h-dvh w-full items-center justify-center bg-gray-900/30">
+        <div className="h-32 w-32 animate-spin rounded-full border-gray-900">
           <img src={pokeBall} alt="" />
         </div>
       </div>
     );
 
   return (
-    <div className="relative flex flex-col justify-center mt-32 md:mt-20">
+    <div className="relative mt-32 flex flex-col justify-center md:mt-20">
       {pokemonSearch.trim() !== "" && searchResults !== null ? (
-        <div className="p-4 bg-yellow-100 border border-yellow-400 rounded-md shadow-md">
+        <div className="rounded-md border border-yellow-400 bg-yellow-100 p-4 shadow-md">
           <h2 className="text-lg font-bold text-yellow-700">
             Search Results for "{pokemonSearch}"
           </h2>
 
           {searchResults.length > 0 ? (
-            <div className="mt-4 flex flex-col items-center">
+            <div className="mt-4 flex flex-row items-center justify-center gap-2">
+              <button onClick={() => onToggleControl(searchResults[0].id - 1)}>
+                {"<<"} Prev
+              </button>
               <div
                 onClick={() => onToggleModal(searchResults[0].name)}
-                className="flex flex-col items-center bg-white hover:bg-gray-100 duration-200 p-4 rounded-md cursor-pointer shadow-md w-1/2"
+                className="flex w-1/2 cursor-pointer flex-col items-center rounded-md bg-white p-4 shadow-md duration-200 hover:bg-gray-100"
               >
-                <p className="text-gray-500 text-sm">ID: {searchResults[0].id}</p>
+                <p className="text-sm text-gray-500">
+                  ID: {searchResults[0].id}
+                </p>
                 <h2 className="text-2xl font-bold text-blue-600">
-                  {searchResults[0].name.charAt(0).toUpperCase() + searchResults[0].name.slice(1)}
+                  {searchResults[0].name.charAt(0).toUpperCase() +
+                    searchResults[0].name.slice(1)}
                 </h2>
               </div>
+              <button onClick={() => onToggleControl(searchResults[0].id + 1)}>
+                Next {">>"}
+              </button>
             </div>
           ) : (
-            <p className="text-center text-red-500 mt-4">No Pokémon found. Try another name.</p>
+            <p className="mt-4 text-center text-red-500">
+              No Pokémon found. Try another name.
+            </p>
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-2">
+        <div className="grid grid-cols-2 gap-2 p-2 md:grid-cols-3 lg:grid-cols-4">
           {pokemonData.map((pokemon, index) => (
             <div
               key={index}
               onClick={() => onToggleModal(pokemon.name)}
-              className="flex justify-start items-center gap-4 bg-gray-100 hover:bg-slate-200 duration-200 p-4 rounded-md cursor-pointer"
+              className="flex cursor-pointer items-center justify-start gap-4 rounded-md bg-gray-100 p-4 duration-200 hover:bg-slate-200"
             >
-              <p>{index + 1}</p>
-              <h2 className="text-sm md:text-xl font-bold">
+              <p>{pokemon.id}</p>
+              <h2 className="text-sm font-bold md:text-xl">
                 {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
               </h2>
             </div>
@@ -125,13 +144,19 @@ const PokemonCards = () => {
       )}
 
       {hasMore && pokemonSearch.trim() === "" && (
-        <button onClick={loadMore} className="mt-4 p-2 bg-blue-500 text-white rounded-md">
+        <button
+          onClick={loadMore}
+          className="mt-4 rounded-md bg-blue-500 p-2 text-white"
+        >
           Load More
         </button>
       )}
 
       {isModalOpen && clickedPokemon && (
-        <ViewDetailModal clickedPokemon={clickedPokemon} onToggleModal={onToggleModal} />
+        <ViewDetailModal
+          clickedPokemon={clickedPokemon}
+          onToggleModal={onToggleModal}
+        />
       )}
       <ArrowUp />
     </div>

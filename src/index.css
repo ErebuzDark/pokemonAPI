@@ -17,3 +17,43 @@
 *::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* In your main CSS file (e.g., src/styles.css) */
+@layer components {
+  .container {
+    @apply p-3 w-[100px] bg-blue-400 text-white
+  }
+
+  .btn {
+    @apply px-4 py-2 font-medium text-slate-600 rounded-lg;
+  }
+
+  .form {
+    padding: 3rem;
+    background-color: chocolate;
+  }
+
+  
+  .pokemon-img {
+    will-change: trasform, filter;
+    animation: shine 0.6s forwards, upDown 3s infinite ease-in-out;
+  }
+
+  @keyframes upDown {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(15px); }
+  }
+
+  @keyframes shine {
+    0% { 
+        filter: brightness(100) drop-shadow(1px 10px 20px yellow); 
+    }
+    100% { 
+        filter: brightness(1) drop-shadow(0 0 0 transparent); 
+    }
+  }
+
+
+}
+
+
