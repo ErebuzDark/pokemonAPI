@@ -2,8 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import { fetchData, pokemonSearchData } from "../api/apiCalls";
 import { PokemonContext } from "../components/PokemonContext";
 
-// components
+// icons
 import ArrowUp from "../components/ArrowUp";
+import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 
 // assets
 import pokeBall from "../assets/pokeball.png";
@@ -33,8 +35,12 @@ const PokemonCards = () => {
       const fetchPokemonData = async () => {
         try {
           const data = await fetchData(offset);
-          setPokemonData((prevData) => [...prevData, ...data.results]);
-          setHasMore(data.next !== null);
+          if (offset === 0) {
+            setPokemonData(data);
+          } else {
+            setPokemonData((prevData) => [...prevData, ...data]);
+          }
+          setHasMore(data.length > 0);
         } catch (error) {
           setError(error);
         }
@@ -56,7 +62,13 @@ const PokemonCards = () => {
         const data = await pokemonSearchData(pokemonSearch.toLowerCase());
 
         if (data && data.name) {
-          setSearchResults([{ name: data.name, id: data.id }]);
+          setSearchResults([
+            {
+              name: data.name,
+              id: data.id,
+              sprite: data.sprites.other["official-artwork"].front_default,
+            },
+          ]);
         } else {
           setSearchResults([]);
         }
@@ -94,30 +106,43 @@ const PokemonCards = () => {
   return (
     <div className="relative mt-32 flex flex-col justify-center md:mt-20">
       {pokemonSearch.trim() !== "" && searchResults !== null ? (
-        <div className="rounded-md border border-yellow-400 bg-yellow-100 p-4 shadow-md">
+        <div className="h-auto rounded-md border border-yellow-400 bg-yellow-100 p-4 shadow-md">
           <h2 className="text-lg font-bold text-yellow-700">
             Search Results for "{pokemonSearch}"
           </h2>
 
           {searchResults.length > 0 ? (
             <div className="mt-4 flex flex-row items-center justify-center gap-2">
-              <button onClick={() => onToggleControl(searchResults[0].id - 1)}>
-                {"<<"} Prev
+              <button
+                className="rounded-md bg-red-500 p-3 text-white hover:bg-red-400"
+                onClick={() => onToggleControl(searchResults[0].id - 1)}
+              >
+                <IoIosArrowBack />
               </button>
               <div
                 onClick={() => onToggleModal(searchResults[0].name)}
-                className="flex w-1/2 cursor-pointer flex-col items-center rounded-md bg-white p-4 shadow-md duration-200 hover:bg-gray-100"
+                className="relative flex w-1/2 max-w-[300px] cursor-pointer flex-col items-center overflow-hidden rounded-md bg-white p-4 shadow-md duration-200 hover:bg-gray-100"
               >
-                <p className="text-sm text-gray-500">
-                  ID: {searchResults[0].id}
-                </p>
-                <h2 className="text-2xl font-bold text-blue-600">
+                <div className="absolute top-0 left-0 flex h-7 min-w-11 items-center justify-center rounded-br-md bg-red-600">
+                  <p className="text-center text-white">
+                    {searchResults[0].id}
+                  </p>
+                </div>
+                <img
+                  src={searchResults[0].sprite}
+                  alt={searchResults[0].sprite}
+                  className="size-16"
+                />
+                <h2 className="text-sm font-bold md:text-xl">
                   {searchResults[0].name.charAt(0).toUpperCase() +
                     searchResults[0].name.slice(1)}
                 </h2>
               </div>
-              <button onClick={() => onToggleControl(searchResults[0].id + 1)}>
-                Next {">>"}
+              <button
+                className="rounded-md bg-red-500 p-3 text-white hover:bg-red-400"
+                onClick={() => onToggleControl(searchResults[0].id + 1)}
+              >
+                <IoIosArrowForward />
               </button>
             </div>
           ) : (
@@ -132,9 +157,17 @@ const PokemonCards = () => {
             <div
               key={index}
               onClick={() => onToggleModal(pokemon.name)}
-              className="flex cursor-pointer items-center justify-start gap-4 rounded-md bg-gray-100 p-4 duration-200 hover:bg-slate-200"
+              className="relative flex cursor-pointer flex-col items-center justify-center gap-4 overflow-hidden rounded-md bg-gray-100 p-4 duration-200 hover:bg-slate-200"
             >
-              <p>{pokemon.id}</p>
+              <div className="absolute top-0 left-0 flex h-7 min-w-11 items-center justify-center rounded-br-md bg-red-600">
+                <p className="text-center text-white">{pokemon.id}</p>
+              </div>
+
+              <img
+                src={pokemon.sprite}
+                alt={pokemon.sprite}
+                className="size-16"
+              />
               <h2 className="text-sm font-bold md:text-xl">
                 {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
               </h2>

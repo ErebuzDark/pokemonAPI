@@ -7,11 +7,25 @@ const API = axios.create({
 export const fetchData = async (offset) => {
   try {
     const response = await API.get("/pokemon/?offset=" + offset + "&limit=20");
-    return response.data;
+    const pokemonList = response.data.results;
+
+    const detailedPokemonList = await Promise.all(
+      pokemonList.map(async (pokemon) => {
+        const pokemonResponse = await API.get(pokemon.url);
+        return {
+          name: pokemonResponse.data.name,
+          sprite: pokemonResponse.data.sprites.front_default,
+          id: pokemonResponse.data.id,
+        };
+      })
+    );
+
+    return detailedPokemonList;
   } catch (error) {
     throw error;
   }
 };
+
 
 export const pokemonSearchData = async (pokemonSearch) => {
   try {

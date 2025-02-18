@@ -91,7 +91,7 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
         <div className="relative flex h-52 justify-center overflow-hidden rounded-lg border-[0.3px]">
           <img
             className="pokemon-img z-50"
-            src={pokemonData.sprites.front_default}
+            src={pokemonData.sprites.other["official-artwork"].front_default}
             alt={pokemonData.name || "default"}
           />
           <div className="absolute -top-3 -left-3 flex size-16 items-center justify-center rounded-full bg-red-500 text-white">
