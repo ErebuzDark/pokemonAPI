@@ -45,6 +45,23 @@ export const pokemonClickedData = async (name) => {
   }
 };
 
+export const pokemonStorydata = async (name) => {
+  try {
+    const response = await API.get(`pokemon-species/${name}/`)
+    const data = await response.data;
+
+    const flavorTextEntry = data.flavor_text_entries.find(entry => entry.language.name === "en");
+
+    if (flavorTextEntry) {
+      return flavorTextEntry.flavor_text;
+    } else {
+        return "No story available.";
+    }
+  } catch (error) {
+    console.error("Error fetching Pokémon story:", error);
+  }
+}
+
 export const pokemonLocation = async (name) => {
   try {
     const response = await API.get(`pokemon/${name}/encounters`);

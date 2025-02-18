@@ -14,7 +14,8 @@ import ViewDetailModal from "../components/modal/ViewDetailModal";
 const PokemonCards = () => {
   const [pokemonData, setPokemonData] = useState([]);
   const [searchResults, setSearchResults] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [loadMoreLoading, SerLoadMoreLoading] = useState(false);
   const [error, setError] = useState(false);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -31,7 +32,7 @@ const PokemonCards = () => {
 
   useEffect(() => {
     if (pokemonSearch.trim() === "") {
-      setLoading(true);
+      SerLoadMoreLoading(true);
       const fetchPokemonData = async () => {
         try {
           const data = await fetchData(offset);
@@ -44,7 +45,7 @@ const PokemonCards = () => {
         } catch (error) {
           setError(error);
         }
-        setLoading(false);
+        SerLoadMoreLoading(false);
       };
       fetchPokemonData();
     }
@@ -86,7 +87,7 @@ const PokemonCards = () => {
   };
 
   const loadMore = () => {
-    setOffset((prevOffset) => prevOffset + 20);
+    setOffset((prevOffset) => prevOffset + 50);
   };
 
   if (error)
@@ -175,8 +176,7 @@ const PokemonCards = () => {
           ))}
         </div>
       )}
-
-      {hasMore && pokemonSearch.trim() === "" && (
+      {!loadMoreLoading && hasMore && pokemonSearch.trim() === "" && (
         <button
           onClick={loadMore}
           className="mt-4 rounded-md bg-blue-500 p-2 text-white"
@@ -184,7 +184,11 @@ const PokemonCards = () => {
           Load More
         </button>
       )}
-
+      {loadMoreLoading && (
+        <button disabled className="mt-4 rounded-md bg-blue-500 p-2 text-white">
+          Loading..
+        </button>
+      )}
       {isModalOpen && clickedPokemon && (
         <ViewDetailModal
           clickedPokemon={clickedPokemon}

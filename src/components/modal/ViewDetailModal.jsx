@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { pokemonClickedData, pokemonLocation } from "../../api/apiCalls";
+import {
+  pokemonClickedData,
+  pokemonLocation,
+  pokemonStorydata,
+} from "../../api/apiCalls";
 
 // assets
 import pokeball from "../../assets/pokeball.png";
@@ -15,6 +19,7 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
 
   const [pokemonData, setCPokemonData] = useState([]);
   const [pokemonLocations, setPokemonLocations] = useState([]);
+  const [pokemonStory, setPokemonStory] = useState(null);
 
   const [pokemonSprites, setPokemonSprites] = useState(pokeball);
 
@@ -23,8 +28,8 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
       setLoading(true);
       const data = await pokemonClickedData(name);
       setCPokemonData(data);
-
-      // Fetch location data
+      const story = await pokemonStorydata(name);
+      setPokemonStory(story);
       const locations = await pokemonLocation(name);
       setPokemonLocations(
         locations.map((loc) => loc.location_area.name.replace(/-/g, " ")),
@@ -64,7 +69,7 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
     ice: "bg-cyan-500",
     fighting: "bg-orange-500 text-white",
     poison: "bg-purple-500 text-white",
-    ground: "bg-brown-500 text-white",
+    ground: "bg-orange-300 text-white",
     flying: "bg-indigo-500 text-white",
     psychic: "bg-pink-500 text-white",
     bug: "bg-lime-500 text-white",
@@ -83,8 +88,13 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="m-auto w-[600px] rounded-md bg-white p-5 shadow-xl md:p-8"
+        className="relative m-auto w-[600px] rounded-md bg-white p-5 shadow-xl md:p-8 overflow-hidden"
       >
+        <img
+          className="absolute -bottom-40 -right-16 opacity-20 z-0"
+          src={pokemonData.sprites.other["official-artwork"].front_default}
+          alt={pokemonData.name || "default"}
+        />
         <h1 className="pb-3 text-center text-3xl font-bold md:text-4xl">
           Pokemon Details
         </h1>
@@ -123,6 +133,9 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
             <p>Weight: {pokemonData.weight}</p>
           </div>
         </div>
+        <div className="p-2 border rounded-lg my-2">
+          <p>{pokemonStory}</p>
+        </div>
         <div className="mt-4">
           <h1 className="flex items-center text-xl font-semibold">
             <IoLocationOutline className="text-slate-500" />
@@ -131,7 +144,10 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
           {pokemonLocations.length > 0 ? (
             <ul className="flex flex-wrap gap-2">
               {pokemonLocations.slice(0, 3).map((location, index) => (
-                <li key={index} className="rounded-md bg-green-200 px-2 py-1">
+                <li
+                  key={index}
+                  className="rounded-md bg-green-200 text-sm px-1"
+                >
                   {location}
                 </li>
               ))}
@@ -147,13 +163,16 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
           </h1>
           <ul className="flex flex-row flex-wrap gap-2">
             {pokemonData.abilities?.map((ability, index) => (
-              <li className="w-fit rounded-md bg-amber-200 px-1" key={index}>
+              <li
+                className="w-fit rounded-md bg-amber-200 text-sm px-1"
+                key={index}
+              >
                 {ability.ability.name}
               </li>
             ))}
           </ul>
         </div>
-        <div className="mt-4">
+        <div className="mt-4 z-50">
           <h1 className="flex items-center text-xl font-semibold">
             <LuSwords className="text-slate-500" />
             Moves
@@ -177,7 +196,7 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
 
         <button
           onClick={onToggleModal}
-          className="mt-4 w-full rounded-md bg-red-400 p-2 text-white duration-300 hover:bg-red-500"
+          className="sticky mt-4 w-full rounded-md bg-red-400 p-2 text-white duration-300 hover:bg-red-500 z-20"
         >
           Close
         </button>
