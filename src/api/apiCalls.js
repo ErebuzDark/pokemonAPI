@@ -6,7 +6,7 @@ const API = axios.create({
 
 export const fetchData = async (offset) => {
   try {
-    const response = await API.get("/pokemon/?offset=" + offset + "&limit=20");
+    const response = await API.get("/pokemon/?offset=" + offset + "&limit=50");
     const pokemonList = response.data.results;
 
     const detailedPokemonList = await Promise.all(
@@ -16,6 +16,7 @@ export const fetchData = async (offset) => {
           name: pokemonResponse.data.name,
           sprite: pokemonResponse.data.sprites.front_default,
           id: pokemonResponse.data.id,
+          types: pokemonResponse.data.types.map((type) => type.type.name)
         };
       })
     );
@@ -44,6 +45,14 @@ export const pokemonClickedData = async (name) => {
     throw error;
   }
 };
+
+export const pokemonTitle = async (name) => {
+  try {
+    const response = await API.get("")
+  } catch (error) {
+    throw error;
+  }
+}
 
 export const pokemonStorydata = async (name) => {
   try {

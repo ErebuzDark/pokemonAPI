@@ -18,10 +18,20 @@
   background: transparent;
 }
 
+
+@font-face {
+  font-family: "pokemonFont";
+  src: url(./assets/fonts/PokemonGb-RAeo.ttf)
+}
+
 /* In your main CSS file (e.g., src/styles.css) */
 @layer components {
   .container {
     @apply p-3 w-[100px] bg-blue-400 text-white
+  }
+
+  .card {
+    @apply relative flex cursor-pointer flex-col items-center justify-center gap-4 overflow-hidden rounded-md bg-gray-100 p-4 duration-200 hover:bg-slate-200 shadow-md border-[0.3px] border-slate-200
   }
 
   .btn {
@@ -38,6 +48,21 @@
     will-change: trasform, filter;
     animation: shine 0.6s forwards, upDown 3s infinite ease-in-out;
   }
+
+  .icon-animation {
+    animation: roll 2s infinite forwards;
+  }
+  
+  @keyframes roll {
+    0% { transform: translateX(0px) rotate(0deg); }
+    30% { transform: translateX(-10px) rotate(-15deg); }
+    40% { transform: translateX(3px) rotate(2deg); }
+    50% { transform: translateX(0px) rotate(0deg); }
+    70% { transform: translateX(10px) rotate(15deg); }
+    90% { transform: translateX(-3px) rotate(2deg); }
+    100% { transform: translateX(0px) rotate(0deg); }
+  }
+  
 
   @keyframes upDown {
       0%, 100% { transform: translateY(0px); }
