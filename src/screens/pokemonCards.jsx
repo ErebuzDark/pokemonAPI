@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { fetchData, pokemonSearchData } from '../api/apiCalls';
-import { PokemonContext } from '../components/PokemonContext';
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { fetchData, pokemonSearchData } from "../api/apiCalls";
+import { PokemonContext } from "../components/PokemonContext";
 
 // components
-import Cards from '../components/Cards';
+import Cards from "../components/Cards";
 
 // icons
-import ArrowUp from '../components/ArrowUp';
-import { IoIosArrowBack } from 'react-icons/io';
-import { IoIosArrowForward } from 'react-icons/io';
-import { IoIosArrowDown } from 'react-icons/io';
+import ArrowUp from "../components/ArrowUp";
+import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
 
 // assets
-import pokeBall from '../assets/pokeball.png';
-import ViewDetailModal from '../components/modal/ViewDetailModal';
+import pokeBall from "../assets/pokeball.png";
+import ViewDetailModal from "../components/modal/ViewDetailModal";
 
 const PokemonCards = () => {
   const [pokemonData, setPokemonData] = useState([]);
@@ -26,7 +26,7 @@ const PokemonCards = () => {
 
   const { pokemonSearch, setPokemonSearch } = useContext(PokemonContext);
 
-  const [clickedPokemon, setClickedPokemon] = useState('');
+  const [clickedPokemon, setClickedPokemon] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // pang filtering ng pokemon
@@ -38,8 +38,29 @@ const PokemonCards = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  // para sa auto load more pag na reach na yung bottom part ng page
+  const bottomRef = useRef(null);
   useEffect(() => {
-    if (pokemonSearch.trim() === '') {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        loadMore();
+      }
+    });
+
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
+
+    return () => {
+      if (bottomRef.current) {
+        observer.unobserve(bottomRef.current);
+      }
+    };
+  }, []);
+
+  // pag fecth ng initial list ng pokemon
+  useEffect(() => {
+    if (pokemonSearch.trim() === "") {
       SerLoadMoreLoading(true);
       const fetchPokemonData = async () => {
         try {
@@ -75,7 +96,7 @@ const PokemonCards = () => {
             {
               name: data.name,
               id: data.id,
-              sprite: data.sprites.other['official-artwork'].front_default,
+              sprite: data.sprites.other["official-artwork"].front_default,
               types: data.types.map((type) => type.type.name),
             },
           ]);
@@ -103,7 +124,10 @@ const PokemonCards = () => {
     ? pokemonData.filter((pokemon) => pokemon.types.includes(selectedType))
     : pokemonData;
 
-  if (error) return <div className="text-center text-red-500">Error: {error.message}</div>;
+  if (error)
+    return (
+      <div className="text-center text-red-500">Error: {error.message}</div>
+    );
 
   if (loading)
     return (
@@ -116,7 +140,7 @@ const PokemonCards = () => {
 
   return (
     <div className="relative mt-52 flex flex-col justify-center md:mt-20 md:mx-28 sm:mx-16">
-      {pokemonSearch.trim() !== '' && searchResults !== null ? (
+      {pokemonSearch.trim() !== "" && searchResults !== null ? (
         <div className="h-auto rounded-md border border-yellow-400 bg-yellow-100 p-4 shadow-md">
           <h2 className="text-lg font-bold text-yellow-700">
             Search Results for "{pokemonSearch}"
@@ -135,7 +159,9 @@ const PokemonCards = () => {
                 className="relative flex w-1/2 max-w-[300px] cursor-pointer flex-col items-center overflow-hidden rounded-md bg-white p-4 shadow-md duration-200 hover:bg-gray-100"
               >
                 <div className="absolute top-0 left-0 flex h-7 min-w-11 items-center justify-center rounded-br-md bg-red-600">
-                  <p className="text-center text-white">{searchResults[0].id}</p>
+                  <p className="text-center text-white">
+                    {searchResults[0].id}
+                  </p>
                 </div>
                 <img
                   src={searchResults[0].sprite}
@@ -143,7 +169,8 @@ const PokemonCards = () => {
                   className="size-16 hover:scale-125 duration-300"
                 />
                 <h2 className="text-sm font-bold md:text-xl">
-                  {searchResults[0].name.charAt(0).toUpperCase() + searchResults[0].name.slice(1)}
+                  {searchResults[0].name.charAt(0).toUpperCase() +
+                    searchResults[0].name.slice(1)}
                 </h2>
               </div>
               <button
@@ -154,13 +181,18 @@ const PokemonCards = () => {
               </button>
             </div>
           ) : (
-            <p className="mt-4 text-center text-red-500">No Pokémon found. Try another name.</p>
+            <p className="mt-4 text-center text-red-500">
+              No Pokémon found. Try another name.
+            </p>
           )}
         </div>
       ) : (
-        <Cards filteredPokemon={filteredPokemon} onToggleModal={onToggleModal} />
+        <Cards
+          filteredPokemon={filteredPokemon}
+          onToggleModal={onToggleModal}
+        />
       )}
-      {!loadMoreLoading && hasMore && pokemonSearch.trim() === '' && (
+      {!loadMoreLoading && hasMore && pokemonSearch.trim() === "" && (
         <button
           onClick={loadMore}
           className="w-40 mt-4 m-3 rounded-md flex items-center justify-center self-center bg-red-500 px-2 py-1 text-white"
@@ -169,13 +201,21 @@ const PokemonCards = () => {
           <IoIosArrowDown className="size-6" />
         </button>
       )}
+      <div ref={bottomRef}></div>
       {loadMoreLoading && (
         <div className="flex items-center justify-center">
-          <img src={pokeBall} alt={pokeBall} className="animate-spin size-[40px]" />
+          <img
+            src={pokeBall}
+            alt={pokeBall}
+            className="animate-spin size-[40px]"
+          />
         </div>
       )}
       {isModalOpen && clickedPokemon && (
-        <ViewDetailModal clickedPokemon={clickedPokemon} onToggleModal={onToggleModal} />
+        <ViewDetailModal
+          clickedPokemon={clickedPokemon}
+          onToggleModal={onToggleModal}
+        />
       )}
       <ArrowUp />
     </div>

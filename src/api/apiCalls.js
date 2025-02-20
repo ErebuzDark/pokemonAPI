@@ -64,10 +64,11 @@ export const pokemonStorydata = async (name) => {
     if (flavorTextEntry) {
       return flavorTextEntry.flavor_text;
     } else {
-        return "No story available.";
+        return "No description available.";
     }
   } catch (error) {
     console.error("Error fetching Pokémon story:", error);
+    return "No description available for this Pokemon right now.";
   }
 }
 
