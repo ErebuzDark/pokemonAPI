@@ -58,7 +58,7 @@ const PokemonCards = () => {
     };
   }, []);
 
-  // pag fecth ng initial list ng pokemon
+  // pag fetch ng initial list ng pokemon
   useEffect(() => {
     if (pokemonSearch.trim() === "") {
       SerLoadMoreLoading(true);
@@ -78,7 +78,7 @@ const PokemonCards = () => {
       };
       fetchPokemonData();
     }
-  }, [offset, pokemonSearch]);
+  }, [offset]);
 
   useEffect(() => {
     if (!pokemonSearch.trim()) {

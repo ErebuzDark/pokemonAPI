@@ -78,6 +78,15 @@
     }
   }
 
+  .animate-bg-spin {
+    animation: spiningBG 5s infinite linear;
+  }
+
+  @keyframes spiningBG {
+    0% {}
+    100% {transform: rotate(360deg);}
+  }
+
 
 }
 

@@ -108,7 +108,7 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
         />
 
         <div className="relative">
-          <h1 className="absolute -top-3 sm:-top-3 md:-top-4 left-1/2 transform -translate-x-1/2 flex px-2 bg-white pb-3 text-center text-[1rem] font-bold md:text-2xl z-50">
+          <h1 className="absolute -top-3 sm:-top-3 md:-top-4 left-1/2 transform -translate-x-1/2 flex px-2 bg-white pb-3 text-center text-[1rem] font-bold md:text-2xl z-48">
             Pokemon Details
           </h1>
           <div className="relative flex h-52 justify-center overflow-hidden rounded-lg border-[0.3px]">
@@ -119,6 +119,18 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
             />
             <div className="absolute -top-3 -left-3 flex size-16 items-center justify-center rounded-full bg-red-500 text-white">
               <p className="font-bold">{pokemonData.id}</p>
+            </div>
+            <div className="animate-bg-spin absolute -top-1 left-1/2 transform -translate-x-1/2 z-49">
+              <img
+                className="min-w-[400px] "
+                src={
+                  typeIcons.find(
+                    (t) => t.type === pokemonData.types[0].type.name,
+                  ).bg || ""
+                }
+                alt={pokemonData.types.name}
+              />
+              {/* <img className="z-50" src={typeIcons[0].bg} alt="" /> */}
             </div>
             <div
               className={`absolute top-32 ${typeColors[pokemonData.types?.[0]?.type?.name]} size-[800px] rounded-full`}

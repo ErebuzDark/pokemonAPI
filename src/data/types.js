@@ -20,27 +20,49 @@ import steelIcon from "../assets/type-icons/Steel_icon.png";
 import stellarIcon from "../assets/type-icons/Stellar_icon.png";
 import waterIcon from "../assets/type-icons/Water_icon.png";
 
+// custom type bg
+import bugBG from "../assets/type-bg/bug.png";
+import darkBG from "../assets/type-bg/dark.png";
+import dragonBG from "../assets/type-bg/dragon.png";
+import electricBG from "../assets/type-bg/electric.png";
+import fairyBG from "../assets/type-bg/fairy.png";
+import fightBG from "../assets/type-bg/fight.png";
+import fireBG from "../assets/type-bg/fire.png";
+import flyingBG from "../assets/type-bg/flying.png";
+import ghostBG from "../assets/type-bg/ghost.png";
+import grassBG from "../assets/type-bg/grass.png";
+import groundBG from "../assets/type-bg/ground.png";
+import iceBG from "../assets/type-bg/ice.png";
+import normalBG from "../assets/type-bg/normal.png";
+import poisonBG from "../assets/type-bg/poison.png";
+import psychicBG from "../assets/type-bg/psychic.png";
+import rockBG from "../assets/type-bg/rock.png";
+import steelBG from "../assets/type-bg/steel.png";
+import stellarBG from "../assets/type-bg/stellar.png";
+import waterBG from "../assets/type-bg/water.png";
+
+
 export const typeIcons = [
-  { type: "bug", icon: bugIcon, title: "Bug" },
-  { type: "dark", icon: darkIcon, title: "Dark" },
-  { type: "dragon", icon: dragonIcon, title: "Dragon" },
-  { type: "electric", icon: electricIcon, title: "Electric" },
-  { type: "fairy", icon: fairyIcon, title: "Fairy" },
-  { type: "fighting", icon: fightingIcon, title: "Fighting" },
-  { type: "fire", icon: fireIcon, title: "Fire" },
-  { type: "flying", icon: flyingIcon, title: "Flying" },
-  { type: "ghost", icon: ghostIcon, title: "Ghost" },
-  { type: "grass", icon: grassIcon, title: "Grass" },
-  { type: "ground", icon: groundIcon, title: "Ground" },
-  { type: "ice", icon: iceIcon, title: "Ice" },
-  { type: "none-type", icon: noneTypeIcon, title: "None" },
-  { type: "normal", icon: normalIcon, title: "Normal" },
-  { type: "poison", icon: poisonIcon, title: "Poison" },
-  { type: "psychic", icon: psychicIcon, title: "Psychic" },
-  { type: "rock", icon: rockIcon, title: "Rock" },
-  { type: "steel", icon: steelIcon, title: "Steel" },
-  { type: "stellar", icon: stellarIcon, title: "Stellar" },
-  { type: "water", icon: waterIcon, title: "Water" }
+  { type: "bug", icon: bugIcon, bg: bugBG, title: "Bug" },
+  { type: "dark", icon: darkIcon, bg: darkBG, title: "Dark" },
+  { type: "dragon", icon: dragonIcon, bg: dragonBG, title: "Dragon" },
+  { type: "electric", icon: electricIcon, bg: electricBG, title: "Electric" },
+  { type: "fairy", icon: fairyIcon, bg: fairyBG, title: "Fairy" },
+  { type: "fighting", icon: fightingIcon, bg: fightBG, title: "Fighting" },
+  { type: "fire", icon: fireIcon, bg: fireBG, title: "Fire" },
+  { type: "flying", icon: flyingIcon, bg: flyingBG, title: "Flying" },
+  { type: "ghost", icon: ghostIcon, bg: ghostBG, title: "Ghost" },
+  { type: "grass", icon: grassIcon, bg: grassBG, title: "Grass" },
+  { type: "ground", icon: groundIcon, bg: groundBG, title: "Ground" },
+  { type: "ice", icon: iceIcon, bg: iceBG, title: "Ice" },
+  { type: "none-type", icon: noneTypeIcon, bg: null, title: "None" },
+  { type: "normal", icon: normalIcon, bg: normalBG, title: "Normal" },
+  { type: "poison", icon: poisonIcon, bg: poisonBG, title: "Poison" },
+  { type: "psychic", icon: psychicIcon, bg: psychicBG, title: "Psychic" },
+  { type: "rock", icon: rockIcon, bg: rockBG, title: "Rock" },
+  { type: "steel", icon: steelIcon, bg: steelBG, title: "Steel" },
+  { type: "stellar", icon: stellarIcon, bg: stellarBG, title: "Stellar" },
+  { type: "water", icon: waterIcon, bg: waterBG, title: "Water" }
 ];
 
 
