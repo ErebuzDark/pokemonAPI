@@ -139,9 +139,9 @@ const PokemonCards = () => {
     );
 
   return (
-    <div className="relative mt-52 flex flex-col justify-center md:mt-20 md:mx-28 sm:mx-16">
+    <div className="relative mt-52 flex flex-col justify-center md:mt-20 md:mx-28 sm:mx-16 mx-3">
       {pokemonSearch.trim() !== "" && searchResults !== null ? (
-        <div className="h-auto rounded-md border border-yellow-400 bg-yellow-100 p-4 shadow-md">
+        <div className="h-auto mt-11 rounded-md border border-yellow-400 bg-yellow-100 p-4 shadow-md">
           <h2 className="text-lg font-bold text-yellow-700">
             Search Results for "{pokemonSearch}"
           </h2>

@@ -79,7 +79,7 @@
   }
 
   .animate-bg-spin {
-    animation: spiningBG 5s infinite linear;
+    animation: spiningBG 8s infinite linear;
   }
 
   @keyframes spiningBG {
