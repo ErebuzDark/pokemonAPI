@@ -79,8 +79,10 @@ const Navbar = () => {
               >
                 {" "}
                 <option value="">All Types</option>
-                {typeIcons.map((type) => (
-                  <option value={type.type}>{type.title}</option>
+                {typeIcons.map((type, index) => (
+                  <option key={index} value={type.type}>
+                    {type.title}
+                  </option>
                 ))}
               </select>
             </div>

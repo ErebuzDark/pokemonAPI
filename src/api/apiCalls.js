@@ -40,7 +40,17 @@ export const pokemonSearchData = async (pokemonSearch) => {
 export const pokemonClickedData = async (name) => {
   try {
     const response = await API.get("/pokemon/"+name);
-    return response.data;
+    const pokemonData = response.data;
+
+    const stats = {};
+    pokemonData.stats.forEach((stat) => {
+      stats[stat.stat.name] = stat.base_stat;
+    });
+
+    return {
+      ...pokemonData,
+      stats,
+    };
   } catch (error) {
     throw error;
   }
@@ -67,7 +77,7 @@ export const pokemonStorydata = async (name) => {
         return "No description available.";
     }
   } catch (error) {
-    console.error("Error fetching Pokémon story:", error);
+    // console.error("Error fetching Pokémon story:", error); since wala naman nakukuhang description pag mga pokemon mod
     return "No description available for this Pokemon right now.";
   }
 }

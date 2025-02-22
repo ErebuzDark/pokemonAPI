@@ -5,6 +5,10 @@ import {
   pokemonStorydata,
 } from "../../api/apiCalls";
 
+// component
+import Chart from "../Chart";
+
+// data
 import { typeIcons, typeColors } from "../../data/types";
 
 // assets
@@ -211,44 +215,45 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
             <p className="text-gray-500 ml-5">No known wild locations.</p>
           )}
         </div>
-        <div className="mt-4">
-          <h1 className="flex items-center text-xl font-semibold">
-            <AiOutlineThunderbolt className="text-slate-500" />
-            Abilities
-          </h1>
-          <ul className="flex flex-row flex-wrap gap-2 ml-5">
-            {pokemonData.abilities?.map((ability, index) => (
-              <li
-                className="w-fit rounded-md bg-amber-200 text-sm px-1"
-                key={index}
-              >
-                {ability.ability.name}
-              </li>
-            ))}
-          </ul>
+        <div className="flex flex-col md:flex-row justify-between">
+          <div>
+            <div className="mt-4">
+              <h1 className="flex items-center text-xl font-semibold">
+                <AiOutlineThunderbolt className="text-slate-500" />
+                Abilities
+              </h1>
+              <ul className="flex flex-row flex-wrap gap-2 ml-5">
+                {pokemonData.abilities?.map((ability, index) => (
+                  <li
+                    className="w-fit rounded-md bg-amber-200 text-sm px-1"
+                    key={index}
+                  >
+                    {ability.ability.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-4 z-50">
+              <h1 className="flex items-center text-xl font-semibold">
+                <LuSwords className="text-slate-500" />
+                Moves
+              </h1>
+              <ul className="flex flex-row flex-wrap gap-2 ml-5">
+                {pokemonData.moves?.slice(5, 15).map((move, index) => (
+                  <li
+                    key={index}
+                    className="mt-1 rounded-md bg-gray-100 px-1 text-sm"
+                  >
+                    {move.move.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="min-w-[250px] h-[250px]">
+            <Chart stats={pokemonData.stats} types={pokemonData.types} />
+          </div>
         </div>
-        <div className="mt-4 z-50">
-          <h1 className="flex items-center text-xl font-semibold">
-            <LuSwords className="text-slate-500" />
-            Moves
-          </h1>
-          <ul className="flex flex-row flex-wrap gap-2 ml-5">
-            {pokemonData.moves?.slice(0, 10).map((move, index) => (
-              <li
-                key={index}
-                className="mt-1 rounded-md bg-gray-100 px-1 text-sm"
-              >
-                {move.move.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-        {/* <div>
-          {pokemonData.flavor_text_entries?.map((flavor, index) => (
-            <p key={index}>{flavor.flavor_text}dawdawd</p>
-          ))}
-        </div> */}
-
         <button
           onClick={onToggleModal}
           className="sticky mt-4 w-full rounded-md bg-red-400 p-2 text-white duration-300 hover:bg-red-500 z-20"
