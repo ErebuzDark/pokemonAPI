@@ -39,7 +39,8 @@ const Navbar = () => {
 
   const getClosestMatch = (input) => {
     const matches = stringSimilarity.findBestMatch(input, pokemonList);
-    return matches.bestMatch.rating > 0.5 ? matches.bestMatch.target : null;
+    return matches.bestMatch.target;
+    // return matches.bestMatch.rating > 0.5 ? matches.bestMatch.target : null;
   };
 
   const handleSearch = async (e) => {
@@ -48,16 +49,14 @@ const Navbar = () => {
     // if (!isSearch) return;
 
     try {
-      // Try searching for the Pokémon
       const response = await axios.get(
         `https://pokeapi.co/api/v2/pokemon/${isSearch.toLowerCase()}`,
       );
       setPokemonSearch(isSearch);
-      setSuggestedName(""); // Clear suggestions if found
+      setSuggestedName("");
     } catch (error) {
-      // If Pokémon not found, find a close suggestion
       const suggestion = getClosestMatch(isSearch.toLowerCase());
-      setSuggestedName(suggestion ? `${suggestion}` : "Try another name");
+      setSuggestedName(suggestion ? `${suggestion}` : "none");
     }
   };
 

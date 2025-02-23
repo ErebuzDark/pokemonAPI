@@ -181,14 +181,22 @@ const PokemonCards = () => {
           ) : (
             <div>
               <p className="mt-4 text-center text-yellow-700 font-semibold">
-                No Pokémon found. Did you mean{" "}
-                <span
-                  onClick={() => setPokemonSearch(suggestedName)}
-                  className="font-bold cursor-pointer underline hover:text-yellow-500"
-                >
-                  {suggestedName}
-                </span>
-                ?
+                No Pokémon found.
+                {suggestedName === "none" ? (
+                  <span> Try another name.</span>
+                ) : (
+                  <>
+                    {" "}
+                    Did you mean{" "}
+                    <span
+                      onClick={() => setPokemonSearch(suggestedName)}
+                      className="font-bold cursor-pointer underline hover:text-yellow-500"
+                    >
+                      {suggestedName}
+                    </span>
+                    ?
+                  </>
+                )}
               </p>
               <img
                 className="w-36 m-auto"
