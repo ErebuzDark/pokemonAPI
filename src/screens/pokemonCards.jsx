@@ -14,6 +14,7 @@ import { IoIosArrowDown } from "react-icons/io";
 // assets
 import pokeBall from "../assets/pokeball.png";
 import ViewDetailModal from "../components/modal/ViewDetailModal";
+import lonelyPokeball from "../assets/lone-pokeball.png";
 
 const PokemonCards = () => {
   const [pokemonData, setPokemonData] = useState([]);
@@ -31,6 +32,7 @@ const PokemonCards = () => {
 
   // pang filtering ng pokemon
   const { selectedType, setSelectedType } = useContext(PokemonContext);
+  const { suggestedName, setSuggestedName } = useContext(PokemonContext);
   // const [selectedType, setSelectedType] = useState('');
 
   const onToggleModal = (name) => {
@@ -142,10 +144,6 @@ const PokemonCards = () => {
     <div className="relative mt-52 flex flex-col justify-center md:mt-20 md:mx-28 sm:mx-16 mx-3">
       {pokemonSearch.trim() !== "" && searchResults !== null ? (
         <div className="h-auto mt-11 rounded-md border border-yellow-400 bg-yellow-100 p-4 shadow-md">
-          <h2 className="text-lg font-bold text-yellow-700">
-            Search Results for "{pokemonSearch}"
-          </h2>
-
           {searchResults.length > 0 ? (
             <div className="mt-4 flex flex-row items-center justify-center gap-2">
               <button
@@ -181,9 +179,23 @@ const PokemonCards = () => {
               </button>
             </div>
           ) : (
-            <p className="mt-4 text-center text-red-500">
-              No Pokémon found. Try another name.
-            </p>
+            <div>
+              <p className="mt-4 text-center text-yellow-700 font-semibold">
+                No Pokémon found. Did you mean{" "}
+                <span
+                  onClick={() => setPokemonSearch(suggestedName)}
+                  className="font-bold cursor-pointer underline hover:text-yellow-500"
+                >
+                  {suggestedName}
+                </span>
+                ?
+              </p>
+              <img
+                className="w-36 m-auto"
+                src={lonelyPokeball}
+                alt="lonele-pokeball"
+              />
+            </div>
           )}
         </div>
       ) : (

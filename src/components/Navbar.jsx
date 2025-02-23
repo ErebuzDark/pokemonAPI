@@ -1,9 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { PokemonContext } from "../components/PokemonContext";
 import { typeIcons } from "../data/types";
+import axios from "axios";
+import stringSimilarity from "string-similarity";
 
 // assets
 import pokeBall from "../assets/pokeball.png";
+import searchIcon from "../assets/search-icon.svg";
 
 // icons
 import { IoMdClose } from "react-icons/io";
@@ -11,18 +14,58 @@ import { CiSearch } from "react-icons/ci";
 import { IoFilter } from "react-icons/io5";
 
 const Navbar = () => {
-  const [isSeearh, setIsSearch] = useState("");
+  const [isSearch, setIsSearch] = useState("");
   const { pokemonSearch, setPokemonSearch } = useContext(PokemonContext);
   const { selectedType, setSelectedType } = useContext(PokemonContext);
+  const [pokemonList, setPokemonList] = useState([]);
+  const { suggestedName, setSuggestedName } = useContext(PokemonContext);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setPokemonSearch(isSeearh);
+  // this one ay para sa pokemon name suggestion pag walang match sa user's input.
+  useEffect(() => {
+    const fetchPokemonList = async () => {
+      try {
+        const response = await axios.get(
+          "https://pokeapi.co/api/v2/pokemon?limit=10000",
+        );
+        const names = response.data.results.map((pokemon) => pokemon.name);
+        setPokemonList(names);
+      } catch (error) {
+        console.error("Error fetching Pokémon list", error);
+      }
+    };
+
+    fetchPokemonList();
+  }, []);
+
+  const getClosestMatch = (input) => {
+    const matches = stringSimilarity.findBestMatch(input, pokemonList);
+    return matches.bestMatch.rating > 0.5 ? matches.bestMatch.target : null;
   };
 
-  const handleremoveSearch = () => {
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    setPokemonSearch(isSearch);
+    // if (!isSearch) return;
+
+    try {
+      // Try searching for the Pokémon
+      const response = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon/${isSearch.toLowerCase()}`,
+      );
+      setPokemonSearch(isSearch);
+      setSuggestedName(""); // Clear suggestions if found
+    } catch (error) {
+      // If Pokémon not found, find a close suggestion
+      const suggestion = getClosestMatch(isSearch.toLowerCase());
+      setSuggestedName(suggestion ? `${suggestion}` : "Try another name");
+    }
+  };
+
+  // Clear search
+  const handleRemoveSearch = () => {
     setPokemonSearch("");
     setIsSearch("");
+    setSuggestedName("");
   };
 
   const handleSelectType = (type) => {
@@ -49,31 +92,31 @@ const Navbar = () => {
             <div className="relative w-full">
               <input
                 onChange={(e) => setIsSearch(e.target.value)}
-                value={isSeearh}
+                value={isSearch}
                 type="text"
                 placeholder="Search Pokemon or ID"
-                className="w-full min-w-52 rounded-lg border border-gray-400 p-2"
+                className="w-full min-w-52  rounded-full border border-gray-400 p-2"
               />
               <IoMdClose
                 className="absolute top-[50%] right-[3%] translate-y-[-50%] transform cursor-pointer hover:scale-125"
-                onClick={handleremoveSearch}
+                onClick={handleRemoveSearch}
               />
             </div>
 
             <button
               type="submit"
-              className="flex h-11 w-fit min-w-11 items-center justify-center rounded-full bg-red-500 p-2 text-white duration-300 hover:bg-red-600"
+              className="flex h-11 w-fit min-w-11 items-center justify-center rounded-full p-1 text-white duration-300 hover:bg-slate-200/30"
             >
-              <CiSearch className="size-6" />
+              <img className="size-7" src={searchIcon} alt="search-icon" />
             </button>
           </div>
-          <div className="w-full">
-            <label className="md:hidden text-[11px] font-semibold text-slate-400">
-              Filter by Type
+          <div className="relative w-full mt-3 md:mt-0">
+            <label className="absolute left-1/8 md:left-1/2  transform md:-translate-x-1/2 -top-2 px-2 text-slate-400 text-[9px] bg-gray-800">
+              Filter by
             </label>
-            <div className="w-full mb-4 flex items-center gap-2 bg-white rounded-full px-2">
+            <div className="w-full mb-4 flex items-center border-slate-400">
               <select
-                className="w-full p-2 px-3text-sm text-black  focus:outline-0"
+                className="w-full p-2 px-3text-sm text-slate-400 bg-transparent border-[0.3px] rounded-full focus:outline-[0.3px] focus:outline-slate-300"
                 value={selectedType}
                 onChange={(e) => handleSelectType(e.target.value)}
               >

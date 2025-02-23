@@ -256,7 +256,7 @@ const ViewDetailModal = ({ clickedPokemon, onToggleModal }) => {
         </div>
         <button
           onClick={onToggleModal}
-          className="sticky mt-4 w-full rounded-md bg-red-400 p-2 text-white duration-300 hover:bg-red-500 z-20"
+          className="sticky text-sm mt-4 w-1/4 rounded-full bg-red-400 py-1 text-white duration-300 hover:bg-red-500 z-20"
         >
           Close
         </button>
